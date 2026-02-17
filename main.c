@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <float.h>
 
 #define MAX_EQ 100
 #define MAX_MED 500
+#define NUM_GRANDEZAS 4
 
 /* ================= MODELO DE DADOS ================= */
 
@@ -44,21 +46,26 @@ int buscarEquipamento(int id)
 
 int indiceGrandeza(char g)
 {
-    if (g == 'V')
+    switch (g)
+    {
+    case 'V':
         return 0;
-    if (g == 'I')
+    case 'I':
         return 1;
-    if (g == 'P')
+    case 'P':
         return 2;
-    if (g == 'T')
+    case 'T':
         return 3;
-    return -1;
+    default:
+        return -1;
+    }
 }
 
 /* ================= CADASTRO ================= */
 
 void cadastrarEquipamento()
 {
+
     if (qtdEq >= MAX_EQ)
     {
         printf("\nLimite de equipamentos atingido!\n");
@@ -66,8 +73,15 @@ void cadastrarEquipamento()
     }
 
     int id;
+
     printf("\nID do equipamento: ");
-    scanf("%d", &id);
+    if (scanf("%d", &id) != 1)
+    {
+        printf("Entrada invalida.\n");
+        while (getchar() != '\n')
+            ;
+        return;
+    }
 
     if (buscarEquipamento(id) != -1)
     {
@@ -92,6 +106,7 @@ void cadastrarEquipamento()
 
 void registrarMedicao()
 {
+
     if (qtdMed >= MAX_MED)
     {
         printf("\nLimite de medicoes atingido!\n");
@@ -99,11 +114,18 @@ void registrarMedicao()
     }
 
     int id;
-    printf("\nID do equipamento: ");
-    scanf("%d", &id);
 
-    int pos = buscarEquipamento(id);
-    if (pos == -1)
+    printf("\nID do equipamento: ");
+    if (scanf("%d", &id) != 1)
+    {
+        printf("Entrada invalida.\n");
+        while (getchar() != '\n')
+            ;
+        return;
+    }
+
+    int eqIndex = buscarEquipamento(id);
+    if (eqIndex == -1)
     {
         printf("Erro: equipamento nao encontrado!\n");
         return;
@@ -123,8 +145,15 @@ void registrarMedicao()
     }
 
     float valor;
+
     printf("Valor: ");
-    scanf("%f", &valor);
+    if (scanf("%f", &valor) != 1)
+    {
+        printf("Entrada invalida.\n");
+        while (getchar() != '\n')
+            ;
+        return;
+    }
 
     medicoes[qtdMed].idEq = id;
     medicoes[qtdMed].grandeza = g;
@@ -139,6 +168,7 @@ void registrarMedicao()
 
 void listarEquipamentos()
 {
+
     if (qtdEq == 0)
     {
         printf("\nNenhum equipamento cadastrado.\n");
@@ -159,6 +189,7 @@ void listarEquipamentos()
 
 void listarMedicoes()
 {
+
     if (qtdMed == 0)
     {
         printf("\nNenhuma medicao registrada.\n");
@@ -188,11 +219,17 @@ void relatorios()
         return;
     }
 
-    float soma[MAX_EQ][4] = {0};
-    int cont[MAX_EQ][4] = {0};
+    float soma[MAX_EQ][NUM_GRANDEZAS] = {0};
+    int cont[MAX_EQ][NUM_GRANDEZAS] = {0};
 
-    float min[4] = {999999, 999999, 999999, 999999};
-    float max[4] = {-999999, -999999, -999999, -999999};
+    float min[NUM_GRANDEZAS];
+    float max[NUM_GRANDEZAS];
+
+    for (int i = 0; i < NUM_GRANDEZAS; i++)
+    {
+        min[i] = FLT_MAX;
+        max[i] = -FLT_MAX;
+    }
 
     for (int i = 0; i < qtdMed; i++)
     {
@@ -213,7 +250,7 @@ void relatorios()
             max[gIndex] = medicoes[i].valor;
     }
 
-    char letras[4] = {'V', 'I', 'P', 'T'};
+    char letras[NUM_GRANDEZAS] = {'V', 'I', 'P', 'T'};
 
     printf("\n===== MEDIAS POR EQUIPAMENTO =====\n");
 
@@ -224,7 +261,7 @@ void relatorios()
                equipamentos[i].id,
                equipamentos[i].nome);
 
-        for (int j = 0; j < 4; j++)
+        for (int j = 0; j < NUM_GRANDEZAS; j++)
         {
             if (cont[i][j] > 0)
             {
@@ -237,9 +274,9 @@ void relatorios()
 
     printf("\n===== MINIMO E MAXIMO POR GRANDEZA =====\n");
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < NUM_GRANDEZAS; i++)
     {
-        if (min[i] != 999999)
+        if (min[i] != FLT_MAX)
         {
             printf("%c -> Min: %.2f | Max: %.2f\n",
                    letras[i],
@@ -267,7 +304,14 @@ void menu()
         printf("5 - Relatorios\n");
         printf("6 - Sair\n");
         printf("Escolha: ");
-        scanf("%d", &op);
+
+        if (scanf("%d", &op) != 1)
+        {
+            printf("Entrada invalida.\n");
+            while (getchar() != '\n')
+                ;
+            continue;
+        }
 
         switch (op)
         {
