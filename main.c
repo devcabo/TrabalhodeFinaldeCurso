@@ -1,11 +1,3 @@
-/*
-Aluno: Cauã Barcelos Corrêa
-Curso: Engenharia Eletrica - Programacao I
-Turma 6.2
-UFES
-Trabalho Computacional
-*/
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
