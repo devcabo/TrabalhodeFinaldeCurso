@@ -48,6 +48,7 @@ O menu principal será exibido no terminal.
 
 ## Estrutura Geral do Sistema
 O programa é dividido logicamente nas seguintes partes:  
+
 • Modelo de dados  
 • Armazenamento em memória  
 • Funções auxiliares  
