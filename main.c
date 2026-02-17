@@ -8,7 +8,7 @@
 #define MAX_MED 500
 #define NUM_GRANDEZAS 4
 
-/* ================= TIPOS ================= */
+/* ================= ESTRUTURAS ================= */
 
 typedef struct {
     int id;
@@ -22,15 +22,14 @@ typedef struct {
     float valor;
 } Medicao;
 
-/* ================= DADOS ================= */
+/* ================= DADOS GLOBAIS ================= */
 
 Equipamento equipamentos[MAX_EQ];
 Medicao medicoes[MAX_MED];
-
 int qtdEq = 0;
 int qtdMed = 0;
 
-/* ================= UTIL ================= */
+/* ================= UTILITÁRIOS ================= */
 
 void limparBuffer() {
     while (getchar() != '\n');
@@ -53,51 +52,24 @@ int indiceGrandeza(char g) {
     }
 }
 
-/* ================= ORDENAÇÃO ================= */
-
-void ordenarEquipamentos() {
-    for (int i = 0; i < qtdEq - 1; i++) {
-        for (int j = i + 1; j < qtdEq; j++) {
-            if (equipamentos[i].id > equipamentos[j].id) {
-                Equipamento temp = equipamentos[i];
-                equipamentos[i] = equipamentos[j];
-                equipamentos[j] = temp;
-            }
-        }
-    }
-}
-
-void ordenarMedicoes() {
-    for (int i = 0; i < qtdMed - 1; i++) {
-        for (int j = i + 1; j < qtdMed; j++) {
-            if (medicoes[i].idEq > medicoes[j].idEq) {
-                Medicao temp = medicoes[i];
-                medicoes[i] = medicoes[j];
-                medicoes[j] = temp;
-            }
-        }
-    }
-}
-
-/* ================= CADASTRO ================= */
+/* ================= FUNCIONALIDADES ================= */
 
 void cadastrarEquipamento() {
-
     if (qtdEq >= MAX_EQ) {
-        printf("\nLimite atingido.\n");
+        printf("\n[ERRO] Limite de equipamentos atingido.\n");
         return;
     }
 
     int id;
-    printf("\nID: ");
+    printf("\nID do Equipamento: ");
     if (scanf("%d", &id) != 1) {
-        printf("Entrada invalida.\n");
+        printf("[ERRO] Entrada invalida.\n");
         limparBuffer();
         return;
     }
 
     if (buscarEquipamento(id) != -1) {
-        printf("ID ja existente.\n");
+        printf("[ERRO] ID %d ja existe no sistema.\n", id);
         return;
     }
 
@@ -110,48 +82,48 @@ void cadastrarEquipamento() {
     scanf(" %[^\n]", equipamentos[qtdEq].tipo);
 
     qtdEq++;
-    ordenarEquipamentos();
-
-    printf("Cadastrado com sucesso.\n");
+    printf("Sucesso: Equipamento cadastrado.\n");
 }
 
-/* ================= MEDIÇÃO ================= */
-
 void registrarMedicao() {
-
     if (qtdMed >= MAX_MED) {
-        printf("\nLimite atingido.\n");
+        printf("\n[ERRO] Limite de medicoes atingido.\n");
         return;
     }
 
     int id;
     printf("\nID do equipamento: ");
     if (scanf("%d", &id) != 1) {
-        printf("Entrada invalida.\n");
+        printf("[ERRO] ID invalido.\n");
         limparBuffer();
         return;
     }
 
     if (buscarEquipamento(id) == -1) {
-        printf("Equipamento nao encontrado.\n");
+        printf("[ERRO] Equipamento nao encontrado.\n");
         return;
     }
 
     char g;
     printf("Grandeza (V/I/P/T): ");
-    scanf(" %c", &g);
-    g = toupper(g);
-    limparBuffer();
+    if (scanf(" %c", &g) != 1) {
+        printf("[ERRO] Entrada invalida.\n");
+        limparBuffer();
+        return;
+    }
+
+    g = toupper(g);       // Converte antes da validação
+    limparBuffer();       // Limpa buffer após leitura do char
 
     if (indiceGrandeza(g) == -1) {
-        printf("Grandeza invalida.\n");
+        printf("[ERRO] Grandeza invalida.\n");
         return;
     }
 
     float valor;
-    printf("Valor: ");
+    printf("Valor medido: ");
     if (scanf("%f", &valor) != 1) {
-        printf("Entrada invalida.\n");
+        printf("[ERRO] Valor invalido.\n");
         limparBuffer();
         return;
     }
@@ -159,162 +131,148 @@ void registrarMedicao() {
     medicoes[qtdMed].idEq = id;
     medicoes[qtdMed].grandeza = g;
     medicoes[qtdMed].valor = valor;
-
     qtdMed++;
-    ordenarMedicoes();
 
-    printf("Medicao registrada.\n");
+    printf("Sucesso: Medicao registrada.\n");
 }
 
-/* ================= LISTAGENS ================= */
-
-void listarEquipamentos() {
-
+void listarDados() {
     if (qtdEq == 0) {
-        printf("\nNenhum equipamento.\n");
+        printf("\nNenhum dado cadastrado.\n");
         return;
     }
 
-    printf("\n===== EQUIPAMENTOS =====\n");
-    printf("%-10s %-20s %-20s\n", "ID", "Nome", "Tipo");
+    printf("\n--- LISTAGEM DE EQUIPAMENTOS ---\n");
+    printf("%-6s | %-25s | %-15s\n", "ID", "NOME", "TIPO");
+    printf("----------------------------------------------------------\n");
 
-    for (int i = 0; i < qtdEq; i++)
-        printf("%-10d %-20s %-20s\n",
+    for (int i = 0; i < qtdEq; i++) {
+        printf("%-6d | %-25s | %-15s\n",
                equipamentos[i].id,
                equipamentos[i].nome,
                equipamentos[i].tipo);
+    }
+
+    if (qtdMed > 0) {
+        printf("\n--- LISTAGEM DE MEDICOES ---\n");
+        printf("%-8s | %-10s | %-10s\n", "ID EQ", "GRANDEZA", "VALOR");
+        printf("--------------------------------------------\n");
+
+        for (int i = 0; i < qtdMed; i++) {
+            printf("%-8d | %-10c | %-10.2f\n",
+                   medicoes[i].idEq,
+                   medicoes[i].grandeza,
+                   medicoes[i].valor);
+        }
+    }
 }
 
-void listarMedicoes() {
+/* ================= RELATÓRIO ================= */
 
+void gerarRelatorios() {
     if (qtdMed == 0) {
-        printf("\nNenhuma medicao.\n");
+        printf("\nNao ha dados para gerar relatorios.\n");
         return;
     }
 
-    printf("\n===== MEDICOES =====\n");
-    printf("%-10s %-10s %-10s\n", "ID", "G", "Valor");
-
-    for (int i = 0; i < qtdMed; i++)
-        printf("%-10d %-10c %-10.2f\n",
-               medicoes[i].idEq,
-               medicoes[i].grandeza,
-               medicoes[i].valor);
-}
-
-/* ================= RELATÓRIOS ================= */
-
-void calcularEstatisticas(float soma[][NUM_GRANDEZAS],
-                           int cont[][NUM_GRANDEZAS],
-                           float min[],
-                           float max[]) {
-
-    for (int i = 0; i < qtdMed; i++) {
-
-        int eqIndex = buscarEquipamento(medicoes[i].idEq);
-        int gIndex = indiceGrandeza(medicoes[i].grandeza);
-
-        soma[eqIndex][gIndex] += medicoes[i].valor;
-        cont[eqIndex][gIndex]++;
-
-        if (medicoes[i].valor < min[gIndex])
-            min[gIndex] = medicoes[i].valor;
-
-        if (medicoes[i].valor > max[gIndex])
-            max[gIndex] = medicoes[i].valor;
-    }
-}
-
-void exibirRelatorio(float soma[][NUM_GRANDEZAS],
-                     int cont[][NUM_GRANDEZAS],
-                     float min[],
-                     float max[]) {
-
-    char letras[NUM_GRANDEZAS] = {'V','I','P','T'};
-
-    printf("\n===== MEDIAS =====\n");
-
-    for (int i = 0; i < qtdEq; i++) {
-        printf("\nEquipamento %d (%s)\n",
-               equipamentos[i].id,
-               equipamentos[i].nome);
-
-        for (int j = 0; j < NUM_GRANDEZAS; j++)
-            if (cont[i][j] > 0)
-                printf("%c: %.2f\n",
-                       letras[j],
-                       soma[i][j] / cont[i][j]);
-    }
-
-    printf("\n===== MIN E MAX =====\n");
-
-    for (int i = 0; i < NUM_GRANDEZAS; i++)
-        if (min[i] != FLT_MAX)
-            printf("%c -> Min: %.2f | Max: %.2f\n",
-                   letras[i],
-                   min[i],
-                   max[i]);
-}
-
-void relatorios() {
-
-    if (qtdMed == 0) {
-        printf("\nSem medicoes.\n");
-        return;
-    }
-
-    float soma[MAX_EQ][NUM_GRANDEZAS] = {0};
-    int cont[MAX_EQ][NUM_GRANDEZAS] = {0};
-    float min[NUM_GRANDEZAS];
-    float max[NUM_GRANDEZAS];
+    float matrizSoma[MAX_EQ][NUM_GRANDEZAS] = {0};
+    int matrizCont[MAX_EQ][NUM_GRANDEZAS] = {0};
+    
+    float minG[NUM_GRANDEZAS], maxG[NUM_GRANDEZAS];
 
     for (int i = 0; i < NUM_GRANDEZAS; i++) {
-        min[i] = FLT_MAX;
-        max[i] = -FLT_MAX;
+        minG[i] = FLT_MAX;
+        maxG[i] = -FLT_MAX;
     }
 
-    calcularEstatisticas(soma, cont, min, max);
-    exibirRelatorio(soma, cont, min, max);
-}
+    for (int i = 0; i < qtdMed; i++) {
+        int idxEq = buscarEquipamento(medicoes[i].idEq);
+        int idxG = indiceGrandeza(medicoes[i].grandeza);
 
-/* ================= MENU ================= */
+        if (idxEq != -1 && idxG != -1) {
+            matrizSoma[idxEq][idxG] += medicoes[i].valor;
+            matrizCont[idxEq][idxG]++;
 
-void menu() {
+            if (medicoes[i].valor < minG[idxG]) minG[idxG] = medicoes[i].valor;
+            if (medicoes[i].valor > maxG[idxG]) maxG[idxG] = medicoes[i].valor;
+        }
+    }
 
-    int op;
+    char letras[] = {'V', 'I', 'P', 'T'};
 
-    do {
-        printf("\n===== MENU =====\n");
-        printf("1 - Cadastrar\n");
-        printf("2 - Registrar\n");
-        printf("3 - Listar Equipamentos\n");
-        printf("4 - Listar Medicoes\n");
-        printf("5 - Relatorios\n");
-        printf("6 - Sair\n");
-        printf("Opcao: ");
+    printf("\n================ RELATORIO DE MEDIAS ================\n");
 
-        if (scanf("%d", &op) != 1) {
-            printf("Entrada invalida.\n");
-            limparBuffer();
-            continue;
+    for (int i = 0; i < qtdEq; i++) {
+        printf("Equipamento: %-20s | ID: %-5d\n",
+               equipamentos[i].nome,
+               equipamentos[i].id);
+
+        printf("%-10s | %-10s\n", "GRANDEZA", "MEDIA");
+        printf("----------------------------\n");
+
+        int temMedicao = 0;
+
+        for (int j = 0; j < NUM_GRANDEZAS; j++) {
+            if (matrizCont[i][j] > 0) {
+                printf("%-10c | %-10.2f\n",
+                       letras[j],
+                       matrizSoma[i][j] / matrizCont[i][j]);
+                temMedicao = 1;
+            }
         }
 
-        switch (op) {
-            case 1: cadastrarEquipamento(); break;
-            case 2: registrarMedicao(); break;
-            case 3: listarEquipamentos(); break;
-            case 4: listarMedicoes(); break;
-            case 5: relatorios(); break;
-            case 6: printf("Encerrando...\n"); break;
-            default: printf("Opcao invalida.\n");
+        if (!temMedicao) {
+            printf("Sem medicoes registradas.\n");
         }
 
-    } while (op != 6);
+        printf("--------------------------------------\n");
+    }
+
+    printf("\n========= VALORES EXTREMOS POR GRANDEZA =========\n");
+    printf("%-10s | %-10s | %-10s\n", "GRANDEZA", "MINIMO", "MAXIMO");
+    printf("--------------------------------------------\n");
+
+    for (int j = 0; j < NUM_GRANDEZAS; j++) {
+        if (minG[j] != FLT_MAX) {
+            printf("%-10c | %-10.2f | %-10.2f\n",
+                   letras[j],
+                   minG[j],
+                   maxG[j]);
+        }
+    }
 }
 
 /* ================= MAIN ================= */
 
 int main() {
-    menu();
+    int opcao;
+
+    do {
+        printf("\n===== MENU PRINCIPAL =====\n");
+        printf("1. Cadastrar Equipamento\n");
+        printf("2. Registrar Medicao\n");
+        printf("3. Listar Equipamentos e Medicoes\n");
+        printf("4. Relatorios (Medias, Min, Max)\n");
+        printf("5. Sair\n");
+        printf("Opcao: ");
+
+        if (scanf("%d", &opcao) != 1) {
+            printf("Entrada invalida! Use apenas numeros.\n");
+            limparBuffer();
+            opcao = 0;
+            continue;
+        }
+
+        switch (opcao) {
+            case 1: cadastrarEquipamento(); break;
+            case 2: registrarMedicao(); break;
+            case 3: listarDados(); break;
+            case 4: gerarRelatorios(); break;
+            case 5: printf("\nEncerrando programa...\n"); break;
+            default: printf("\nOpcao invalida. Tente novamente.\n");
+        }
+
+    } while (opcao != 5);
+
     return 0;
 }
