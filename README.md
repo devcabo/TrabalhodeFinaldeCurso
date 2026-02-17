@@ -1,7 +1,7 @@
 # Sistema de Cadastro de Equipamentos e Medições Elétricas
-Este repositório contém um programa desenvolvido em linguagem C para cadastro de equipamentos e registro de medições elétricas.
+Este repositório contém um programa desenvolvido em linguagem C para cadastro de equipamentos e registro de medições elétricas.  
 
-O sistema funciona totalmente via terminal, utilizando entrada e saída padrão (printf e scanf), com armazenamento em memória por meio de struct, vetores e matriz de resumo.
+O sistema funciona totalmente via terminal, utilizando entrada e saída padrão (printf e scanf), com armazenamento em memória por meio de struct, vetores e matriz de resumo.  
 
 ## Pré-requisitos
 Antes de executar o projeto, verifique se você possui:
