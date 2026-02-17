@@ -21,8 +21,8 @@ gcc --version
 ```
 
 ## Passo 1️⃣: Baixar o arquivo
-Coloque o arquivo .c do projeto em uma pasta local no seu computador.
-Exemplo:
+Coloque o arquivo .c do projeto em uma pasta local no seu computador.  
+Exemplo:  
 
 ```bash
 projeto/
@@ -31,50 +31,50 @@ projeto/
 ```
 
 ## Passo 2️⃣: Compilar o programa
-Abra o terminal na pasta onde está o arquivo .c e execute:
+Abra o terminal na pasta onde está o arquivo .c e execute:  
 
 ```bash
 gcc ELE_nome_sobrenome.c -o programa
 ```
-Isso irá gerar um arquivo executável chamado programa.
+Isso irá gerar um arquivo executável chamado programa.  
 
 ## Passo 3️⃣: Executar o programa
-No Linux, macOS e Windows:
+No Linux, macOS e Windows:  
 
 ```bash
 ./programa
 ```
-O menu principal será exibido no terminal.
+O menu principal será exibido no terminal.  
 
 ## Estrutura Geral do Sistema
-O programa é dividido logicamente nas seguintes partes:
-• Modelo de dados
-• Armazenamento em memória
-• Funções auxiliares
-• Cadastro
-• Registro de medições
-• Listagem
-• Relatórios
-• Controle de fluxo (menu)
-• Função principal
+O programa é dividido logicamente nas seguintes partes:  
+• Modelo de dados  
+• Armazenamento em memória  
+• Funções auxiliares  
+• Cadastro  
+• Registro de medições  
+• Listagem  
+• Relatórios  
+• Controle de fluxo (menu)  
+• Função principal  
 
 ## Explicação das Funcionalidades
 
-## 1. Cadastro de Equipamentos
-Permite cadastrar um novo equipamento no sistema.
-O usuário informa:
+## 1. Cadastro de Equipamentos  
+Permite cadastrar um novo equipamento no sistema.  
+O usuário informa:  
 
-• ID (inteiro)
-• Nome
-• Tipo
+• ID (inteiro)  
+• Nome  
+• Tipo  
 
-Validações implementadas:
+Validações implementadas:  
 
-• Não permite ID duplicado
-• Limite máximo de equipamentos definido por MAX_EQ
-• Dados armazenados em vetor de struct Equipamento
+• Não permite ID duplicado  
+• Limite máximo de equipamentos definido por MAX_EQ  
+• Dados armazenados em vetor de struct Equipamento  
 
-Exemplo de uso:
+Exemplo de uso:  
 
 ```bash
 1 - Cadastrar equipamento
@@ -83,22 +83,22 @@ Nome: Motor
 Tipo: Inducao
 ```
 
-## 2. Registro de Medições
-Permite registrar uma medição vinculada a um equipamento existente.
+## 2. Registro de Medições  
+Permite registrar uma medição vinculada a um equipamento existente.  
 
-O usuário informa:
+O usuário informa:  
 
-• ID do equipamento
-• Grandeza (V, I, P ou T)
-• Valor (float)
+• ID do equipamento  
+• Grandeza (V, I, P ou T)  
+• Valor (float)  
 
 Validações:
 
-• Não permite registrar medição para equipamento inexistente
-• Não permite grandeza inválida
-• Aceita letra minúscula ou maiúscula
+• Não permite registrar medição para equipamento inexistente  
+• Não permite grandeza inválida  
+• Aceita letra minúscula ou maiúscula  
 
-Exemplo:
+Exemplo:  
 
 ```bash
 2 - Registrar medicao
@@ -107,70 +107,70 @@ Grandeza: V
 Valor: 220
 ```
 
-## 3. Listagem de Equipamentos
+## 3. Listagem de Equipamentos  
 
-Exibe todos os equipamentos cadastrados em formato de tabela:
+Exibe todos os equipamentos cadastrados em formato de tabela:  
 
 ```bash
 ID        Nome                 Tipo
 1         Motor                Inducao
 ```
-A saída utiliza formatação alinhada para melhor visualização.
+A saída utiliza formatação alinhada para melhor visualização.  
 
-## 4. Listagem de Medições
-Exibe todas as medições registradas:
+## 4. Listagem de Medições  
+Exibe todas as medições registradas:  
 
 ```bash
 ID Eq     Grandeza   Valor
 1         V          220.00
 ```
-Os valores são exibidos com duas casas decimais.
+Os valores são exibidos com duas casas decimais.  
 
 ## 5. Relatórios
-O sistema gera dois tipos de relatório:
-• Médias por Equipamento e por Grandeza
-Internamente utiliza matriz:
+O sistema gera dois tipos de relatório:  
+• Médias por Equipamento e por Grandeza  
+Internamente utiliza matriz:  
 
 ```bash
 float soma[MAX_EQ][4]
 int cont[MAX_EQ][4]
 ```
 
-Cada linha representa um equipamento.
-Cada coluna representa uma grandeza:
+Cada linha representa um equipamento.  
+Cada coluna representa uma grandeza:  
 
-0 → V
-1 → I
-2 → P
-3 → T
-Cálculo da média:
+0 → V  
+1 → I  
+2 → P  
+3 → T  
+Cálculo da média:  
 
 ```bash
 média = soma / contagem
 ```
 
-• Mínimo e Máximo por Grandeza
+• Mínimo e Máximo por Grandeza  
 
-Para cada grandeza registrada, o sistema calcula:
-Menor valor registrado
-Maior valor registrado
+Para cada grandeza registrada, o sistema calcula:  
+Menor valor registrado  
+Maior valor registrado  
 
-Exemplo de saída:
+Exemplo de saída:  
 
 ```bash
 V -> Min: 220.00 | Max: 230.00
 ```
 
-## 6. Encerramento
-A opção "Sair" encerra o programa.
+## 6. Encerramento  
+A opção "Sair" encerra o programa.  
 
-Observação importante:
-Todos os dados são mantidos apenas durante a execução.
-Ao encerrar o programa, os dados são perdidos.
+Observação importante:  
+Todos os dados são mantidos apenas durante a execução.  
+Ao encerrar o programa, os dados são perdidos.  
 
-## Estruturas de Dados Utilizadas
+## Estruturas de Dados Utilizadas  
 
-struct Equipamento
+struct Equipamento  
 
 ```bash
 int id
@@ -178,7 +178,7 @@ char nome[60]
 char tipo[30]
 ```
 
-struct Medicao
+struct Medicao  
 
 ```bash
 int idEq
@@ -186,13 +186,13 @@ char grandeza
 float valor
 ```
 
-## Limitações do Sistema
+## Limitações do Sistema  
 
-• Dados não persistem após encerramento
-• Limite máximo fixo de equipamentos e medições
-• Validação básica de entrada
+• Dados não persistem após encerramento  
+• Limite máximo fixo de equipamentos e medições  
+• Validação básica de entrada  
 
-## Exemplo Completo de Execução
+## Exemplo Completo de Execução  
 
 ```bash
 1
@@ -209,7 +209,7 @@ V
 
 ```
 
-Saída esperada:
+Saída esperada:  
 
 ```bash
 Equipamento 1 (Motor):
@@ -218,4 +218,4 @@ V: 220.00
 V -> Min: 220.00 | Max: 220.00
 ```
 
-Aproveite o projeto e fique à vontade para personalizar este README de acordo com as necessidades do seu repositório. Divirta-se codificando! 🎉😄
+Aproveite o projeto e fique à vontade para personalizar este README de acordo com as necessidades do seu repositório. Divirta-se codificando! 🎉😄  
