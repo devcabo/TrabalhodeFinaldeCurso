@@ -219,4 +219,4 @@ V: 220.00
 V -> Min: 220.00 | Max: 220.00
 ```
 
-Aproveite o projeto e fique à vontade para personalizar este README de acordo com as necessidades do seu repositório. Divirta-se codificando! 🎉😄  
+Aproveite o projeto.
